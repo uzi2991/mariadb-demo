@@ -4,8 +4,6 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 
-console.log(process.env.DB_HOST)
-
 const pool = mariadb.createPool({
   host: process.env.DB_HOST,
   port: parseInt(process.env.DB_PORT),

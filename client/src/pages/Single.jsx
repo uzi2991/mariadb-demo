@@ -1,23 +1,40 @@
-import React, { useEffect, useState } from "react";
-import Edit from "../img/edit.png";
-import Delete from "../img/delete.png";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import Menu from "../components/Menu";
-import axios from "axios";
-import moment from "moment";
-import { useContext } from "react";
-import { AuthContext } from "../context/authContext";
-import DOMPurify from "dompurify";
+import React, { useEffect, useState } from 'react';
+import Edit from '../img/edit.png';
+import Delete from '../img/delete.png';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import Menu from '../components/Menu';
+import axios from 'axios';
+import moment from 'moment';
+import { useContext } from 'react';
+import { AuthContext } from '../context/authContext';
+import ReactQuill from 'react-quill';
+import DOMPurify from 'dompurify';
+import CommentList from '../components/CommentList';
+
 
 const Single = () => {
   const [post, setPost] = useState({});
+  const [comment, setComment] = useState('');
+  const [comments, setComments] = useState([]);
 
   const location = useLocation();
   const navigate = useNavigate();
 
-  const postId = location.pathname.split("/")[2];
+  const postId = location.pathname.split('/')[2];
 
   const { currentUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const res = await axios.get(`/comments?pid=${postId}`);
+        setComments(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchComments();
+  }, [postId]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,50 +48,81 @@ const Single = () => {
     fetchData();
   }, [postId]);
 
-  const handleDelete = async ()=>{
+  const handleDelete = async () => {
     try {
       await axios.delete(`/posts/${postId}`);
-      navigate("/")
+      navigate('/');
     } catch (err) {
       console.log(err);
     }
-  }
+  };
 
-  const getText = (html) =>{
-    const doc = new DOMParser().parseFromString(html, "text/html")
-    return doc.body.textContent
-  }
+  const handleAddComment = async () => {
+    try {
+      const commentData = {
+        username: currentUser.username,
+        content: comment,
+        pid: postId,
+        date: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
+      };
+      await axios.post(`/comments`, commentData);
+      setComment('');
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getText = (html) => {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent;
+  };
 
   return (
     <div className="single">
-      <div className="content">
-      
-        <img src={`/${post.img}`} alt="" />
-        <div className="user">
-          {post.userImg && <img
-            src={post.userImg}
-            alt=""
-          />}
-          <div className="info">
-            <span>{post.username}</span>
-            <p>Posted {moment(post.date).fromNow()}</p>
-          </div>
-          {currentUser.username === post.username && (
-            <div className="edit">
-              <Link to={`/write?edit=2`} state={post}>
-                <img src={Edit} alt="" />
-              </Link>
-              <img onClick={handleDelete} src={Delete} alt="" />
+      <div className="content-wrapper">
+        <div className="content">
+          <img src={`/${post.img}`} alt="" />
+          <div className="user">
+            {post.userImg && <img src={post.userImg} alt="" />}
+            <div className="info">
+              <span>{post.username}</span>
+              <p>Posted {moment(post.date).fromNow()}</p>
             </div>
-          )}
+            {currentUser.username === post.username && (
+              <div className="edit">
+                <Link to={`/write?edit=2`} state={post}>
+                  <img src={Edit} alt="" />
+                </Link>
+                <img onClick={handleDelete} src={Delete} alt="" />
+              </div>
+            )}
+          </div>
+          <h1>{post.title}</h1>
+          <p
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(post.desc),
+            }}
+          ></p>{' '}
         </div>
-        <h1>{post.title}</h1>
-        <p
-          dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(post.desc),
-          }}
-        ></p>      </div>
-      <Menu cat={post.cat}/>
+        <Menu cat={post.cat} />
+      </div>
+
+      <div>
+        <div className="editorContainer">
+          <ReactQuill
+            className="editor"
+            theme="snow"
+            value={comment}
+            placeholder="Write a comment"
+            onChange={setComment}
+          />
+          <button className="comment-button" onClick={handleAddComment}>
+            Add comment
+          </button>
+        </div>
+      </div>
+
+      <CommentList comments={comments} />
     </div>
   );
 };

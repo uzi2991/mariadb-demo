@@ -27,6 +27,7 @@ export const getPost = async (req, res) => {
 
 export const addPost = async (req, res) => {
   const token = req.cookies.access_token;
+
   if (!token) return res.status(401).json('Not authenticated!');
 
   try {
@@ -44,11 +45,14 @@ export const addPost = async (req, res) => {
 
     try {
       await db.pool.query(q, [values]);
+
       return res.json('Post has been created.');
     } catch (err) {
+      console.log(err);
       return res.status(500).json(err);
     }
   } catch (err) {
+    console.log(err);
     return res.status(403).json('Token is not valid!');
   }
 };

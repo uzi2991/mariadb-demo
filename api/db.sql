@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `blog_app`.`users` (
 CREATE TABLE IF NOT EXISTS `blog_app`.`posts` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(255) NOT NULL,
-  `desc` VARCHAR(1000) NOT NULL,
+  `desc` TEXT NOT NULL,
   `img` VARCHAR(255) NOT NULL,
   `cat` VARCHAR(255) NOT NULL,
   `date` DATETIME NOT NULL,
@@ -26,4 +26,27 @@ CREATE TABLE IF NOT EXISTS `blog_app`.`posts` (
   REFERENCES `blog_app`.`users` (`id`)
   ON DELETE CASCADE
   ON UPDATE CASCADE
+);
+
+--create table comments
+CREATE TABLE IF NOT EXISTS `blog_app`.`comments` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `content` TEXT NOT NULL,
+  `username` VARCHAR(255) NOT NULL,
+  `date` DATETIME NOT NULL,
+  `uid` INT NOT NULL,
+  `pid` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `cmt_pid_idx` (`pid` ASC) VISIBLE,
+  CONSTRAINT `cmt_pid`
+    FOREIGN KEY (`pid`)
+    REFERENCES `blog_app`.`posts` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  INDEX `cmt_uid_idx` (`uid` ASC) VISIBLE,
+  CONSTRAINT `cmt_uid`
+    FOREIGN KEY (`uid`)
+    REFERENCES `blog_app`.`users` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
 );

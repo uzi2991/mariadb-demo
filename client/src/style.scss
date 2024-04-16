@@ -3,6 +3,7 @@ $lightGreen: #b9e7e7;
 .app {
   display: flex;
   justify-content: center;
+
   .container {
     width: 1024px;
 
@@ -10,6 +11,7 @@ $lightGreen: #b9e7e7;
       text-decoration: none;
       color: inherit;
     }
+
     //LOGIN & REGISTER
 
     .auth {
@@ -69,11 +71,13 @@ $lightGreen: #b9e7e7;
         display: flex;
         align-items: center;
         justify-content: space-between;
+
         .logo {
           img {
             width: 120px;
           }
         }
+
         .links {
           display: flex;
           align-items: center;
@@ -119,6 +123,7 @@ $lightGreen: #b9e7e7;
       align-items: center;
       justify-content: space-between;
       font-size: 12px;
+
       img {
         height: 50px;
       }
@@ -201,7 +206,36 @@ $lightGreen: #b9e7e7;
 
     .single {
       display: flex;
+      flex-direction: column;
       gap: 50px;
+
+      .editorContainer {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .comment-button {
+        margin-left: auto;
+        width: max-content;
+        padding: 7.5px 15px;
+        border: none;
+        cursor: pointer;
+        color: teal;
+        background-color: white;
+        border: 1px solid teal;
+
+        &:hover {
+          border: 1px solid white;
+          background-color: $lightGreen;
+          color: black;
+        }
+      }
+
+      .content-wrapper {
+        display: flex;
+        gap: 50px;
+      }
 
       .content {
         flex: 5;
@@ -220,6 +254,7 @@ $lightGreen: #b9e7e7;
           align-items: center;
           gap: 10px;
           font-size: 14px;
+
           img {
             width: 50px;
             height: 50px;
@@ -253,6 +288,7 @@ $lightGreen: #b9e7e7;
           line-height: 30px;
         }
       }
+
       .menu {
         flex: 2;
         display: flex;
@@ -298,6 +334,40 @@ $lightGreen: #b9e7e7;
       }
     }
 
+
+    //COMMENT 
+    .comments h2 {
+      margin-bottom: 20px;
+    }
+
+    .comments-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .single-comment {
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #d1d5db;
+
+        .upper {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 5px;
+        }
+
+        span {
+          font-size: 0.9rem;
+        }
+
+        p {
+          font-size: 0.8rem;
+          font-style: italic;
+        }
+      }
+    }
+
     //WRITE
 
     .add {
@@ -337,34 +407,35 @@ $lightGreen: #b9e7e7;
         .item {
           border: 1px solid lightgray;
           padding: 10px;
-          flex:1;
+          flex: 1;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
           font-size: 12px;
           color: #555;
 
-          h1{
+          h1 {
             font-size: 20px;
           }
 
-          .file{
+          .file {
             text-decoration: underline;
             cursor: pointer;
           }
 
-          .buttons{
+          .buttons {
             display: flex;
             justify-content: space-between;
 
-            :first-child{
+            :first-child {
               cursor: pointer;
               color: teal;
               background-color: white;
               border: 1px solid teal;
               padding: 3px 5px;
             }
-            :last-child{
+
+            :last-child {
               cursor: pointer;
               color: white;
               background-color: teal;
@@ -373,7 +444,7 @@ $lightGreen: #b9e7e7;
             }
           }
 
-          .cat{
+          .cat {
             display: flex;
             align-items: center;
             gap: 2px;
