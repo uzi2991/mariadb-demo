@@ -11,7 +11,6 @@ import ReactQuill from 'react-quill';
 import DOMPurify from 'dompurify';
 import CommentList from '../components/CommentList';
 
-
 const Single = () => {
   const [post, setPost] = useState({});
   const [comment, setComment] = useState('');
@@ -24,17 +23,18 @@ const Single = () => {
 
   const { currentUser } = useContext(AuthContext);
 
+  const fetchComments = async () => {
+    try {
+      const res = await axios.get(`/comments?pid=${postId}`);
+      setComments(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const res = await axios.get(`/comments?pid=${postId}`);
-        setComments(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
     fetchComments();
-  }, [postId]);
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,6 +67,7 @@ const Single = () => {
       };
       await axios.post(`/comments`, commentData);
       setComment('');
+      fetchComments();
     } catch (err) {
       console.log(err);
     }
@@ -85,10 +86,14 @@ const Single = () => {
           <div className="user">
             {post.userImg && <img src={post.userImg} alt="" />}
             <div className="info">
-              <span>{post.username}</span>
+              <Link to={`/user/${post.username}`}>
+  
+                <span>{post.username}</span>
+              </Link>
+
               <p>Posted {moment(post.date).fromNow()}</p>
             </div>
-            {currentUser.username === post.username && (
+            {currentUser && currentUser.username === post.username && (
               <div className="edit">
                 <Link to={`/write?edit=2`} state={post}>
                   <img src={Edit} alt="" />

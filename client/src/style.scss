@@ -129,78 +129,77 @@ $lightGreen: #b9e7e7;
       }
     }
 
-    //HOME
+    // POST
+    .posts {
+      margin-top: 50px;
+      display: flex;
+      flex-direction: column;
+      gap: 150px;
 
-    .home {
-      .posts {
-        margin-top: 50px;
+      .post {
         display: flex;
-        flex-direction: column;
-        gap: 150px;
+        gap: 100px;
 
-        .post {
+        &:nth-child(2n + 1) {
+          flex-direction: row-reverse;
+        }
+
+        .img {
+          flex: 2;
+          position: relative;
+
+          &::after {
+            content: "";
+            width: 100%;
+            height: 100%;
+            background-color: $lightGreen;
+            position: absolute;
+            top: 20px;
+            left: -20px;
+            z-index: -1;
+          }
+
+          img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+          }
+        }
+
+        .content {
+          flex: 3;
           display: flex;
-          gap: 100px;
+          flex-direction: column;
+          justify-content: space-between;
 
-          &:nth-child(2n + 1) {
-            flex-direction: row-reverse;
+          h1 {
+            font-size: 1.8rem;
           }
 
-          .img {
-            flex: 2;
-            position: relative;
+          p {
+            font-size: 1rem;
+            margin-bottom: 10px;
+          }
 
-            &::after {
-              content: "";
-              width: 100%;
-              height: 100%;
+          button {
+            width: max-content;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            background-color: white;
+            border: 1px solid teal;
+            color: teal;
+
+            &:hover {
+              border: 1px solid white;
               background-color: $lightGreen;
-              position: absolute;
-              top: 20px;
-              left: -20px;
-              z-index: -1;
-            }
-
-            img {
-              width: 100%;
-              max-height: 400px;
-              object-fit: cover;
-            }
-          }
-
-          .content {
-            flex: 3;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-
-            h1 {
-              font-size: 48px;
-            }
-
-            p {
-              font-size: 18px;
-            }
-
-            button {
-              width: max-content;
-              padding: 10px 20px;
-              border: none;
-              cursor: pointer;
-              background-color: white;
-              border: 1px solid teal;
-              color: teal;
-
-              &:hover {
-                border: 1px solid white;
-                background-color: $lightGreen;
-                color: black;
-              }
+              color: black;
             }
           }
         }
       }
     }
+
 
     //SINGLE
 
@@ -331,6 +330,30 @@ $lightGreen: #b9e7e7;
             }
           }
         }
+      }
+    }
+
+    //AVATAR
+    .avatar {
+      width: 50px;
+      height: 50px;
+      background-color: $lightGreen;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    //USER
+    .user-profile {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+
+      p {
+        font-size: 0.8rem;
+        font-style: italic;
       }
     }
 

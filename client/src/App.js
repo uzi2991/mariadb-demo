@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import Write from './pages/Write';
 import Home from './pages/Home';
 import Single from './pages/Single';
+import UserProfile from './pages/UserProfile';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import './style.scss';
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
         path: '/write',
         element: <Write />,
       },
+      {
+        path: '/user/:username',
+        element: <UserProfile />,
+      },
     ],
   },
   {
@@ -56,7 +61,7 @@ function Test() {
   return (
     <form action="/upload" method="post" enctype="multipart/form-data">
       <input type="file" name="file" />
-      <button type='submit'>submit</button>
+      <button type="submit">submit</button>
     </form>
   );
 }
