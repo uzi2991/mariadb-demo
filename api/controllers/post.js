@@ -2,12 +2,23 @@ import { db } from '../db.js';
 import jwt from 'jsonwebtoken';
 
 export const getPosts = async (req, res) => {
-  const q = req.query.cat
-    ? 'SELECT * FROM posts WHERE cat=?'
-    : 'SELECT * FROM posts';
+  const { cat, uid } = req.query;
+  let q = 'SELECT * FROM posts ORDER BY date DESC';
+
+  const params = [];
+  if (cat && uid) {
+    q = 'SELECT * FROM posts WHERE cat=? AND uid=? ORDER BY date DESC';
+    params.push(cat, uid);
+  } else if (cat) {
+    q = 'SELECT * FROM posts WHERE cat=? ORDER BY date DESC';
+    params.push(cat);
+  } else if (uid) {
+    q = 'SELECT * FROM posts WHERE uid=? ORDER BY date DESC';
+    params.push(uid);
+  }
 
   try {
-    const data = await db.pool.query(q, [req.query.cat]);
+    const data = await db.pool.query(q, params);
     return res.status(200).json(data);
   } catch (err) {
     return res.status(500).send(err);
