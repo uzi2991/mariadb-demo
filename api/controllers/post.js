@@ -1,5 +1,19 @@
 import { db } from '../db.js';
 import jwt from 'jsonwebtoken';
+import { sendNotificationToFollowers } from '../utils/notification.js';
+
+export const searchPosts = async (req, res) => {
+  const { q } = req.query;
+
+  try {
+    const data = await db.pool.query('SELECT * FROM posts WHERE title LIKE ?', [
+      `%${q}%`,
+    ]);
+    return res.status(200).json(data);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+};
 
 export const getPosts = async (req, res) => {
   const { cat, uid } = req.query;
@@ -55,9 +69,15 @@ export const addPost = async (req, res) => {
     ];
 
     try {
-      await db.pool.query(q, [values]);
+      const result = await db.pool.query(q, [values]);
+      const postId = result.insertId;
+      console.log(postId);
 
-      return res.json('Post has been created.');
+      res.json('Post has been created.');
+
+      await sendNotificationToFollowers(decoded.id, postId);
+
+      return;
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);

@@ -13,6 +13,7 @@ import UserProfile from './pages/UserProfile';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import './style.scss';
+import Search from './pages/Search';
 
 const Layout = () => {
   return (
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <Home />,
+      },
+      {
+        path: '/search',
+        element: <Search />,
       },
       {
         path: '/post/:id',

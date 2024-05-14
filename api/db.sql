@@ -50,3 +50,22 @@ CREATE TABLE IF NOT EXISTS `blog_app`.`comments` (
     ON DELETE CASCADE
     ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS `blog_app`.`followers` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `follower_id` INT NOT NULL,
+  `followee_id` INT NOT NULL,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`follower_id`) REFERENCES `users` (`id`),
+  FOREIGN KEY (`followee_id`) REFERENCES `users` (`id`)
+);
+
+CREATE TABLE IF NOT EXISTS `blog_app`.`notifications` (
+  `id` INT PRIMARY KEY AUTO_INCREMENT,
+  `content` VARCHAR(255) NOT NULL,
+  `url` VARCHAR(255) NOT NULL,
+  `uid` INT NOT NULL,
+  `is_read` BOOLEAN NOT NULL DEFAULT FALSE,
+  `date` DATETIME NOT NULL,
+  FOREIGN KEY (`uid`) REFERENCES `users` (`id`)
+);

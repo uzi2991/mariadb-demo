@@ -1,10 +1,19 @@
-import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/authContext';
 import Logo from '../img/logo.png';
+import Notification from './Notification';
 
 const Navbar = () => {
   const { currentUser, logout } = useContext(AuthContext);
+  const [searchInput, setSearchInput] = useState('');
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    if (searchInput) {
+      navigate(`/search?q=${searchInput}`);
+    }
+  };
 
   return (
     <div className="navbar">
@@ -13,6 +22,13 @@ const Navbar = () => {
           <Link to="/">
             <img src={Logo} alt="" />
           </Link>
+
+          <input
+            placeholder="Enter something"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+          />
+          <button onClick={handleSearch}>Search</button>
         </div>
         <div className="links">
           <Link className="link" to="/?cat=art">
@@ -33,7 +49,15 @@ const Navbar = () => {
           <Link className="link" to="/?cat=food">
             <h6>FOOD</h6>
           </Link>
-          <span>{currentUser?.username}</span>
+          {currentUser && (
+            <>
+              <Link className="link" to={`/user/${currentUser.username}`}>
+                <span>{currentUser.username}</span>
+              </Link>
+              <Notification />
+            </>
+          )}
+
           {currentUser ? (
             <span onClick={logout}>Logout</span>
           ) : (
