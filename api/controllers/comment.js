@@ -1,5 +1,7 @@
 import { db } from '../db.js';
 import jwt from 'jsonwebtoken';
+import { saveNotification } from '../utils/notification.js';
+import moment from 'moment';
 
 export const addComment = async (req, res) => {
   const token = req.cookies.access_token;
@@ -18,9 +20,28 @@ export const addComment = async (req, res) => {
     ];
 
     try {
-      await db.pool.query(q, [values]);
+      const result = await db.pool.query(q, [values]);
+      const commentId = result.insertId;
 
-      return res.json('Comment has been added.');
+      res.json('Comment has been added.');
+
+      // Fetch the post owner ID
+      const postQuery = 'SELECT uid FROM posts WHERE id = ?';
+      const postResult = await db.pool.query(postQuery, [req.body.pid]);
+      const postOwnerId = postResult[0].uid;
+
+      // Send notification to the post owner
+      const notification = {
+        content: `${req.body.username} commented on your post.`,
+        url: `/post/${req.body.pid}#c${commentId}`,
+        uid: postOwnerId,
+        is_read: false,
+        date: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
+      };
+
+      await saveNotification(notification);
+
+      return;
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);

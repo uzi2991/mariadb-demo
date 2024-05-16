@@ -106,12 +106,12 @@ export const getUser = async (req, res) => {
 };
 
 export const getNotifications = async (req, res) => {
-
   const userId = req.user.id;
 
   const query = `
     SELECT * FROM notifications
-    WHERE uid = ?;
+    WHERE uid = ?
+    ORDER BY date DESC;
   `;
 
   try {
@@ -121,5 +121,22 @@ export const getNotifications = async (req, res) => {
   } catch (err) {
     console.log(err);
     res.status(500).json('Error retrieving notifications');
+  }
+};
+
+export const readNotification = async (req, res) => {
+  const { notificationId } = req.params;
+
+  try {
+    // Update the notification in the database to mark it as read
+    await db.pool.query(
+      'UPDATE notifications SET is_read = true WHERE id = ?',
+      [notificationId],
+    );
+
+    return res.json('Notification marked as read.');
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json(err);
   }
 };

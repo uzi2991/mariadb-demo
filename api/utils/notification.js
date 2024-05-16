@@ -37,7 +37,7 @@ export const sendNotificationToFollowers = async (userId, postId) => {
   }
 };
 
-const saveNotification = async (notification) => {
+export const saveNotification = async (notification) => {
   try {
     // Save the notification in the database
     const query =

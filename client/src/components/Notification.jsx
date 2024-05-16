@@ -27,8 +27,24 @@ const Notification = () => {
     fetchNotifications();
   }, []); // Empty dependency array to run effect only once on component mount
 
+  const handleNotificationView = async (notificationId) => {
+    try {
+      await axios.post(`/users/notifications/${notificationId}`);
+      setNotifications((prevNotifications) =>
+        prevNotifications.map((notification) =>
+          notification.id === notificationId
+            ? { ...notification, is_read: true }
+            : notification,
+        ),
+      );
+    } catch (error) {
+      console.error(error);
+      // Handle error case
+    }
+  };
+
   const unreadCount = notifications.filter(
-    (notification) => !notification.read,
+    (notification) => !notification.is_read,
   ).length;
 
   return (
@@ -40,10 +56,20 @@ const Notification = () => {
       {isOpen && (
         <div className="notification-popover">
           {notifications.map((notification) => (
-            <div key={notification.id} className="notification-item">
+            <div
+              key={notification.id}
+              className={`notification-item ${
+                !notification.is_read ? 'unread' : ''
+              }`}
+            >
               <h4>{notification.content}</h4>
               <p>{moment(notification.date).fromNow()}</p>
-              <Link to={notification.url}>View</Link>
+              <Link
+                to={notification.url}
+                onClick={() => handleNotificationView(notification.id)}
+              >
+                View
+              </Link>
             </div>
           ))}
         </div>

@@ -71,7 +71,6 @@ export const addPost = async (req, res) => {
     try {
       const result = await db.pool.query(q, [values]);
       const postId = result.insertId;
-      console.log(postId);
 
       res.json('Post has been created.');
 
