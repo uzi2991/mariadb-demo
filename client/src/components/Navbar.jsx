@@ -28,7 +28,9 @@ const Navbar = () => {
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
           />
-          <button onClick={handleSearch}>Search</button>
+          <button onClick={handleSearch}>
+            <i className="fa-solid fa-magnifying-glass"></i>
+          </button>
         </div>
         <div className="links">
           <Link className="link" to="/?cat=art">

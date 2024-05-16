@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 const PostList = ({ posts }) => {
   const getText = (html) => {
@@ -22,10 +22,12 @@ const PostList = ({ posts }) => {
             <Link className="link" to={`/post/${post.id}`}>
               <h1>{post.title}</h1>
             </Link>
-      
+
             <p>{getText(post.desc)}</p>
             <Link className="link" to={`/post/${post.id}`}>
-              <button>Read more</button>
+              <button>
+                Read more <i className="fa-solid fa-arrow-right"></i>
+              </button>
             </Link>
           </div>
         </div>
