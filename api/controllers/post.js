@@ -70,9 +70,9 @@ export const addPost = async (req, res) => {
 
     try {
       const result = await db.pool.query(q, [values]);
-      const postId = result.insertId;
-
-      res.json('Post has been created.');
+      const postId = Number(result.insertId);
+      
+      res.json({ id: postId });
 
       await sendNotificationToFollowers(decoded.id, postId);
 
@@ -118,7 +118,7 @@ export const updatePost = async (req, res) => {
 
     try {
       await db.pool.query(q, [...values, postId, decoded.id]);
-      return res.json('Post has been updated!');
+      return res.json({ id: postId });
     } catch (err) {
       return res.status(500).json(err);
     }

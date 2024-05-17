@@ -29,7 +29,7 @@ const Write = () => {
     const imgUrl = await upload();
 
     try {
-      state
+      const { data } = state
         ? await axios.put(`/posts/${state.id}`, {
             title,
             desc: value,
@@ -43,7 +43,10 @@ const Write = () => {
             img: file ? imgUrl : '',
             date: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
           });
-      navigate('/');
+
+      const { id } = data;
+
+      navigate(`/post/${id}`);
     } catch (err) {
       console.log(err);
     }

@@ -33,6 +33,16 @@ const Single = () => {
   };
 
   useEffect(() => {
+    if (location.hash && comments.length) {
+      const element = document.querySelector(location.hash);
+      console.log(element);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  }, [location, comments]);
+
+  useEffect(() => {
     fetchComments();
   }, []);
 
@@ -87,7 +97,6 @@ const Single = () => {
             {post.userImg && <img src={post.userImg} alt="" />}
             <div className="info">
               <Link to={`/user/${post.username}`}>
-  
                 <span>{post.username}</span>
               </Link>
 
