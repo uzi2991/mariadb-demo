@@ -72,16 +72,10 @@ export const getUser = async (req, res) => {
       u.id,
       u.username,
       u.email,
-      u.img,
-      CAST(COUNT(DISTINCT f1.id) AS INT) AS follower_count,
-      CAST(COUNT(DISTINCT f2.id) AS INT) AS following_count,
-      GROUP_CONCAT(DISTINCT f1.follower_id) AS followers,
-      GROUP_CONCAT(DISTINCT f2.followee_id) AS following
+      u.img
     FROM users u
-    LEFT JOIN followers f1 ON f1.followee_id = u.id
-    LEFT JOIN followers f2 ON f2.follower_id = u.id
     WHERE u.username = ?
-    GROUP BY u.id, u.username, u.email, u.img;
+   
   `;
 
   try {
@@ -90,16 +84,35 @@ export const getUser = async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
     const user = data[0];
-    user.follower_count = Number(user.follower_count); // Convert to number
-    user.following_count = Number(user.following_count); // Convert to number
-    user.followers = user.followers
-      ? user.followers.split(',').map(Number)
-      : [];
-    user.following = user.following
-      ? user.following.split(',').map(Number)
-      : [];
 
-    return res.status(200).json(user);
+    const getFollowersQuery = `
+      SELECT
+        u.id,
+        u.username,
+        u.img,
+        u.email
+      FROM users u
+      JOIN followers f ON f.follower_id = u.id
+      WHERE f.followee_id = ?
+    `;
+    const followersData = await db.pool.query(getFollowersQuery, [user.id]);
+
+    const getFollowingsQuery = `
+      SELECT
+        u.id,
+        u.username,
+        u.img,
+        u.email
+      FROM users u
+      JOIN followers f ON f.followee_id = u.id
+      WHERE f.follower_id = ?
+    `;
+
+    const followingsData = await db.pool.query(getFollowingsQuery, [user.id]);
+
+    return res
+      .status(200)
+      .json({ ...user, followers: followersData, followings: followingsData });
   } catch (err) {
     return res.status(500).send(err);
   }

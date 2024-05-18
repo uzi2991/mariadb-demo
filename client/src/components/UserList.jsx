@@ -2,6 +2,9 @@ import { Link } from 'react-router-dom';
 import Avatar from './Avatar';
 
 const UserList = ({ users }) => {
+  if (!users.length) {
+    return <p>There are 0 users</p>;
+  }
   return (
     <div className="search-users">
       {users.map((user) => (

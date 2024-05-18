@@ -11,6 +11,10 @@ const PostList = ({ posts }) => {
     return text;
   };
 
+  if (!posts.length) {
+    return <p>There are 0 posts</p>;
+  }
+
   return (
     <div className="posts">
       {posts.map((post) => (

@@ -26,6 +26,7 @@ const Write = () => {
   };
 
   const handleClick = async (e) => {
+    e.preventDefault();
     const imgUrl = await upload();
 
     try {
@@ -45,7 +46,7 @@ const Write = () => {
           });
 
       const { id } = data;
-
+      // window.alert('Created post successfully');
       navigate(`/post/${id}`);
     } catch (err) {
       console.log(err);

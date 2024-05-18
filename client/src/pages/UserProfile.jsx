@@ -5,6 +5,7 @@ import { useLocation } from 'react-router-dom';
 import Avatar from '../components/Avatar';
 import PostList from '../components/PostList';
 import { AuthContext } from '../context/authContext';
+import UserList from '../components/UserList';
 
 const UserProfile = () => {
   const location = useLocation();
@@ -13,11 +14,13 @@ const UserProfile = () => {
   const [userDetail, setUserDetail] = useState(null);
   const [posts, setPosts] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [activeTab, setActiveTab] = useState('posts');
 
   useEffect(() => {
     const fetchUserDetail = async () => {
       try {
         const { data } = await axios.get(`/users/u/${username}`);
+
         setUserDetail(data);
       } catch (err) {
         console.log(err);
@@ -25,7 +28,7 @@ const UserProfile = () => {
     };
 
     fetchUserDetail();
-  }, []);
+  }, [username]);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -45,7 +48,9 @@ const UserProfile = () => {
 
   useEffect(() => {
     const checkFollowingStatus = () => {
-      setIsFollowing(userDetail.followers.includes(currentUser.id));
+      setIsFollowing(
+        userDetail.followers.some((follower) => follower.id === currentUser.id),
+      );
     };
 
     if (userDetail && currentUser) {
@@ -57,12 +62,10 @@ const UserProfile = () => {
     try {
       await axios.post(`/users/follow/${userDetail.id}`);
       setIsFollowing(true);
-
-      const newFollowerId = currentUser.id;
       setUserDetail((prevUser) => ({
         ...prevUser,
-        follower_count: prevUser.follower_count + 1,
-        followers: [...prevUser.followers, newFollowerId],
+
+        followers: [...prevUser.followers, currentUser],
       }));
     } catch (err) {
       console.log(err);
@@ -76,14 +79,18 @@ const UserProfile = () => {
       const unfollowedUserId = currentUser.id;
       setUserDetail((prevUser) => ({
         ...prevUser,
-        follower_count: prevUser.follower_count - 1,
+
         followers: prevUser.followers.filter(
-          (followerId) => followerId !== unfollowedUserId,
+          (follower) => follower.id !== unfollowedUserId,
         ),
       }));
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
   };
 
   if (!userDetail) {
@@ -113,13 +120,49 @@ const UserProfile = () => {
       )}
 
       <div className="user-follow">
-        <strong>{userDetail.following_count}</strong> followings
-        <strong>{userDetail.follower_count}</strong> followers
+        <strong>{userDetail.followings.length}</strong> followings
+        <strong>{userDetail.followers.length}</strong> followers
       </div>
 
-      <div className="user-posts">
-        <h2>All Posts</h2>
-        <PostList posts={posts} />
+      <div>
+        {/* Tab buttons */}
+        <div className="tab">
+          <button
+            className={`${activeTab === 'posts' ? 'active' : ''}`}
+            onClick={() => handleTabClick('posts')}
+          >
+            Posts
+          </button>
+          <button
+            className={`${activeTab === 'followers' ? 'active' : ''}`}
+            onClick={() => handleTabClick('followers')}
+          >
+            Followers
+          </button>
+          <button
+            className={`${activeTab === 'followings' ? 'active' : ''}`}
+            onClick={() => handleTabClick('followings')}
+          >
+            Followings
+          </button>
+        </div>
+        <div>
+          {activeTab === 'posts' && (
+            <div className="tabContent">
+              <PostList posts={posts} />
+            </div>
+          )}
+          {activeTab === 'followers' && (
+            <div className="tabContent">
+              <UserList users={userDetail.followers} />
+            </div>
+          )}
+          {activeTab === 'followings' && (
+            <div className="tabContent">
+              <UserList users={userDetail.followings} />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
