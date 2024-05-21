@@ -24,7 +24,7 @@ const Search = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const { data } = await axios.get(`/posts/search?q=${q}`);
+        const { data } = await axios.get(`/api/posts/search?q=${q}`);
         setPosts(data);
       } catch (err) {
         console.log(err);
@@ -32,7 +32,7 @@ const Search = () => {
     };
     const fetchPeople = async () => {
       try {
-        const { data } = await axios.get(`/users/search?q=${q}`);
+        const { data } = await axios.get(`/api/users/search?q=${q}`);
         setPeople(data);
       } catch (err) {
         console.log(err);

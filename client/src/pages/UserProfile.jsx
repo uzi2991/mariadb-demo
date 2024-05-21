@@ -19,7 +19,7 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchUserDetail = async () => {
       try {
-        const { data } = await axios.get(`/users/u/${username}`);
+        const { data } = await axios.get(`/api/users/u/${username}`);
 
         setUserDetail(data);
       } catch (err) {
@@ -33,7 +33,7 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const { data } = await axios.get(`/posts?uid=${userDetail.id}`);
+        const { data } = await axios.get(`/api/posts?uid=${userDetail.id}`);
         setPosts(data);
       } catch (err) {
         console.log(err);
@@ -60,7 +60,7 @@ const UserProfile = () => {
 
   const handleFollow = async () => {
     try {
-      await axios.post(`/users/follow/${userDetail.id}`);
+      await axios.post(`/api/users/follow/${userDetail.id}`);
       setIsFollowing(true);
       setUserDetail((prevUser) => ({
         ...prevUser,
@@ -74,7 +74,7 @@ const UserProfile = () => {
 
   const handleUnfollow = async () => {
     try {
-      await axios.post(`/users/unfollow/${userDetail.id}`);
+      await axios.post(`/api/users/unfollow/${userDetail.id}`);
       setIsFollowing(false);
       const unfollowedUserId = currentUser.id;
       setUserDetail((prevUser) => ({

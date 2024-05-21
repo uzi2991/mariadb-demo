@@ -25,7 +25,7 @@ const Single = () => {
 
   const fetchComments = async () => {
     try {
-      const res = await axios.get(`/comments?pid=${postId}`);
+      const res = await axios.get(`/api/comments?pid=${postId}`);
       setComments(res.data);
     } catch (err) {
       console.log(err);
@@ -49,7 +49,7 @@ const Single = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(`/posts/${postId}`);
+        const res = await axios.get(`/api/posts/${postId}`);
         setPost(res.data);
       } catch (err) {
         console.log(err);
@@ -60,7 +60,7 @@ const Single = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`/posts/${postId}`);
+      await axios.delete(`/api/posts/${postId}`);
       navigate('/');
     } catch (err) {
       console.log(err);
@@ -75,7 +75,7 @@ const Single = () => {
         pid: postId,
         date: moment(Date.now()).format('YYYY-MM-DD HH:mm:ss'),
       };
-      await axios.post(`/comments`, commentData);
+      await axios.post(`/api/comments`, commentData);
       setComment('');
       fetchComments();
     } catch (err) {

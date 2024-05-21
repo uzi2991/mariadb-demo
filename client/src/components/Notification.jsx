@@ -16,7 +16,7 @@ const Notification = () => {
     const fetchNotifications = async () => {
       try {
         console.log('Hi');
-        const response = await axios.get('/users/notifications'); // Replace with your backend API endpoint
+        const response = await axios.get('/api/users/notifications'); // Replace with your backend API endpoint
         setNotifications(response.data);
       } catch (error) {
         console.error(error);
@@ -29,7 +29,7 @@ const Notification = () => {
 
   const handleNotificationView = async (notificationId) => {
     try {
-      await axios.post(`/users/notifications/${notificationId}`);
+      await axios.post(`/api/users/notifications/${notificationId}`);
       setNotifications((prevNotifications) =>
         prevNotifications.map((notification) =>
           notification.id === notificationId
