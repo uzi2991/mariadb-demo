@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `blog_app`.`posts` (
   ON UPDATE CASCADE
 );
 
---create table comments
+-- create table comments
 CREATE TABLE IF NOT EXISTS `blog_app`.`comments` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `content` TEXT NOT NULL,

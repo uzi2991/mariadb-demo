@@ -46,7 +46,7 @@ const Write = () => {
           });
 
       const { id } = data;
-      // window.alert('Created post successfully');
+      window.alert('Created/Updated post successfully');
       navigate(`/post/${id}`);
     } catch (err) {
       console.log(err);
